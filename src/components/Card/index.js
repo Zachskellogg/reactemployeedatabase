@@ -3,12 +3,9 @@ import "./style.css";
 
 function Card(props) {
   return (
-    <div
-      className="card"
-
-    >
-      <img className="card-img-top" src={props.image} alt='Employee'></img>
-      <div className="card-body information">
+    <div className="card">
+      <div className="card-body">
+      <img className="thumbnail" src={props.image} alt='Employee'></img>
         <h5 className="card-title">{`${props.firstName} ${props.lastName}`}</h5>
         <p className="Card-text">Email: {props.email}</p>
         <p className="Card-text">Phone: {props.phoneNum}</p>

@@ -1,0 +1,13 @@
+nav.navbar.navbar-default {
+    margin-bottom: 0;
+  }
+  .navbar { 
+    background: #518aee;
+    justify-content: center;
+  }
+  
+  
+  .btn { 
+    background-color: rgb(126, 126, 126);
+    margin: 5px;
+  }

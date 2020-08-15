@@ -1,24 +1,21 @@
 import React, { Component } from "react";
-import API from "../utils/API";
+import API from "../utils/api";
 import Card from "../components/Card";
 import Row from "../components/Row"
 import Container from "../components/Container"
 import Column from "../components/Column"
-import "./styles.css";
+import "./style.css";
 
-
-class AllEmp extends Component {
+class Emp extends Component {
   state = {
-    allResults: [],
-    allResultsParsed: [],
     results: [],
+    filteredRes: [],
   };
 
   componentDidMount() {
     API.findPeople().then(res => {
       this.setState({
-        allResults: res.data.results,
-        allResultsParsed: res.data.results,
+        filteredRes: res.data.results,
         results: res.data.results
       });
     });
@@ -26,35 +23,47 @@ class AllEmp extends Component {
 
   handelSearchFN = (event) => {
     const queryFN = event.target.value;
-    this.sortPeopleFN(queryFN);
+    this.searchPeopleFN(queryFN);
   }
   handelSearchLN = (event) => {
     const queryLN = event.target.value;
-    this.sortPeopleLN(queryLN);
+    this.searchPeopleLN(queryLN);
   }
 
-  sortPeopleLN = (value) => {
-    let searchResults = this.state.allResults.filter((x) => { 
+  searchPeopleLN = (value) => {
+    const searchResults = this.state.results.filter((x) => { 
       return x.name.last.toLowerCase().includes(value)
     }) 
     this.setState({
-      allResultsParsed: searchResults
+     filteredRes: searchResults
     })
   }
-  sortPeopleFN = (value) => {
-    let searchResults = this.state.allResults.filter((x) => { 
+  searchPeopleFN = (value) => {
+    const searchResults = this.state.results.filter((x) => { 
       return x.name.first.toLowerCase().includes(value);
     }) 
-    this.setState({
-      allResultsParsed: searchResults
-    })
+    this.setState({filteredRes: searchResults})
+    console.log(this.state.filteredRes);
   }
+
+  handleSortAsc = (event) => {
+    const sorted = this.state.results.sort((a, b) => (a.name.first > b.name.first) ? 1 : -1);
+    this.setState({filteredRes: sorted});
+  }
+
+  handleSortDesc = (event) => {
+    const sorted = this.state.results.sort((a, b) => (a.name.first < b.name.first) ? 1 : -1);
+    this.setState({filteredRes: sorted});
+  }
+
   render() {
-    const results = this.state.allResultsParsed;
+    const results = this.state.filteredRes;
     return (
       <div>
         <h1 className="text-center">Employees</h1>
-        <form className="search-form form-inline">
+        <button type="button" className="btn" onClick={this.handleSortAsc}>Sort Ascending</button>
+        <button type="button" className="btn" onClick={this.handleSortDesc}>Sort Descending</button>
+        <form className="search form-inline">
           <div>
             <input className = "employeeSearch" placeholder="Search by Employee's First Name. "  onChange = {this.handelSearchFN} />
             <input className = "employeeSearch" placeholder="Search by Employee's Last Name. "  onChange = {this.handelSearchLN} />
@@ -63,18 +72,18 @@ class AllEmp extends Component {
         <Container>
           <Row>
             {
-              results.map((employees, i) => (
+              results.map((employee, i) => (
                 <Column key={i}>
                   <Card
-                    image={employees.picture.large}
-                    firstName={employees.name.first}
-                    lastName={employees.name.last}
-                    fullname = {employees.name.first + employees.name.last}
-                    age={employees.dob.age}
-                    DOB={employees.dob.date}
-                    phoneNum={employees.phone}
-                    email={employees.email}
-                    ssn={employees.id.value}
+                    image={employee.picture.large}
+                    firstName={employee.name.first}
+                    lastName={employee.name.last}
+                    fullname = {employee.name.first + employee.name.last}
+                    age={employee.dob.age}
+                    DOB={employee.dob.date}
+                    phoneNum={employee.phone}
+                    email={employee.email}
+                    ssn={employee.id.value}
                   />
                 </Column>
               ))
@@ -87,4 +96,4 @@ class AllEmp extends Component {
   }
 }
 
-export default AllEmp;
+export default Emp;
